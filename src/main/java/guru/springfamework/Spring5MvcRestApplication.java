@@ -1,4 +1,4 @@
-package guru.springfamework.spring5mvcrest;
+package guru.springfamework;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
