@@ -1,4 +1,4 @@
-package guru.springfamework.mappers;
+package guru.springfamework.api.v1.mappers;
 
 import guru.springfamework.api.v1.model.CategoryDTO;
 import guru.springfamework.domain.Category;
