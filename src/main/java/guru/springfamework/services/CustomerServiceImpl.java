@@ -2,6 +2,7 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mappers.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,24 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO getCustomerById(Long id) {
 
         return mapper.customerToCustomerDTO(customerRepository.findById(id).get());
+    }
+
+    @Override
+    public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+        Customer savedCustomer = customerRepository.save(mapper.customerDTOToCustomer(customerDTO));
+        savedCustomer.setUrl("/api/v1/customers/" + savedCustomer.getId());
+        return mapper
+                .customerToCustomerDTO(savedCustomer);
+    }
+
+    @Override
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
+
+        Customer customer = mapper.customerDTOToCustomer(customerDTO);
+        customer.setId(id);
+        Customer savedCustomer = customerRepository.save(customer);
+
+        savedCustomer.setUrl("/api/v1/customers/" + savedCustomer.getId());
+        return mapper.customerToCustomerDTO(savedCustomer);
     }
 }
