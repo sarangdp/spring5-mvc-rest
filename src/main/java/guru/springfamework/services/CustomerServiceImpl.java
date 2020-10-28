@@ -35,7 +35,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO getCustomerById(Long id) {
 
-        return mapper.customerToCustomerDTO(customerRepository.findById(id).get());
+        return customerRepository.findById(id).map(mapper::customerToCustomerDTO)
+                .map(customerDTO -> {
+                    customerDTO.setUrl("api/v1/customer/" + id);
+                    return customerDTO;
+                }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -55,5 +59,21 @@ public class CustomerServiceImpl implements CustomerService {
 
         savedCustomer.setUrl("/api/v1/customers/" + savedCustomer.getId());
         return mapper.customerToCustomerDTO(savedCustomer);
+    }
+
+    @Override
+    public CustomerDTO patchCustomer(Long id, CustomerDTO customerDTO) {
+        Customer customer = mapper.customerDTOToCustomer(customerDTO);
+        return customerRepository.findById(id).map(customer1 -> {
+            if (customerDTO.getFirstName() != null) {
+                customer1.setFirstName(customerDTO.getFirstName());
+            }
+
+            if (customerDTO.getLastName() != null) {
+                customer1.setLastName(customerDTO.getLastName());
+            }
+
+            return mapper.customerToCustomerDTO(customer1);
+        }).orElseThrow(ResourceNotFoundException::new);
     }
 }
